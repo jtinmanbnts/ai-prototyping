@@ -415,21 +415,63 @@
     }
 
     function BIndustries() {
+      const [idx, setIdx] = React.useState(0);
       const industries = ["Financial Services", "Healthcare", "Telecommunications", "Retail", "Restaurant & Convenience", "Consumer Goods", "Logistics", "Travel & Hospitality", "Industrial & Manufacturing", "Media & Entertainment"];
+      const cardW = 340;
+      const cardGap = 16;
+      const maxIdx = industries.length - 3; // keep 2 full + 1 partial always in view
+      const prev = () => setIdx(i => Math.max(0, i - 1));
+      const next = () => setIdx(i => Math.min(maxIdx, i + 1));
       return (
         <div style={{ background: B.darkIndigo, padding: "72px 80px", flexShrink: 0 }}>
-          <div style={{ display: "flex", gap: 80, marginBottom: 56 }}>
-            <h2 style={{ fontFamily: NB, fontWeight: 800, fontSize: 36, color: B.white, lineHeight: 1.2, flex: "0 0 440px" }}>Deep Industry Specialization</h2>
-            <p style={{ fontFamily: NB, fontWeight: 400, fontSize: 16, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, flex: 1, paddingTop: 6 }}>
-              Industry-specific challenges require extensive industry expertise.
-            </p>
-          </div>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            {industries.map(ind => (
-              <div key={ind} style={{ border: `1px solid rgba(255,255,255,0.18)`, borderRadius: 8, padding: "20px 16px", width: 118, background: "rgba(255,255,255,0.04)" }}>
-                <div style={{ fontFamily: NB, fontWeight: 600, fontSize: 12, color: "rgba(255,255,255,0.75)", lineHeight: 1.5 }}>{ind}</div>
+          <div style={{ display: "flex", gap: 64, alignItems: "flex-start" }}>
+
+            {/* Left: title + description stacked */}
+            <div style={{ flex: "0 0 420px" }}>
+              <h2 style={{ fontFamily: NB, fontWeight: 800, fontSize: 36, color: B.white, lineHeight: 1.2, marginBottom: 20 }}>
+                Deep Industry Specialization
+              </h2>
+              <p style={{ fontFamily: NB, fontWeight: 400, fontSize: 16, color: "rgba(255,255,255,0.65)", lineHeight: 1.65 }}>
+                Industry-specific challenges require extensive industry expertise.
+              </p>
+            </div>
+
+            {/* Right: carousel — 2 full cards + partial 3rd */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ overflow: "hidden" }}>
+                <div style={{
+                  display: "flex",
+                  gap: cardGap,
+                  transform: `translateX(-${idx * (cardW + cardGap)}px)`,
+                  transition: "transform 0.3s ease",
+                }}>
+                  {industries.map(ind => (
+                    <div key={ind} style={{
+                      width: cardW, minHeight: 200, flexShrink: 0,
+                      border: "1px solid rgba(255,255,255,0.18)",
+                      borderRadius: 10, padding: "28px 24px",
+                      background: "rgba(255,255,255,0.05)",
+                    }}>
+                      <div style={{ fontFamily: NB, fontWeight: 700, fontSize: 20, color: B.white, lineHeight: 1.35 }}>{ind}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+              {/* Arrow controls */}
+              <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+                {[{ fn: prev, label: "←", active: idx > 0 }, { fn: next, label: "→", active: idx < maxIdx }].map(({ fn, label, active }) => (
+                  <button key={label} onClick={fn} style={{
+                    width: 44, height: 44, borderRadius: "50%",
+                    border: `1px solid rgba(255,255,255,${active ? 0.45 : 0.15})`,
+                    background: "transparent",
+                    color: active ? B.white : "rgba(255,255,255,0.25)",
+                    fontFamily: NB, fontSize: 18, cursor: active ? "pointer" : "default",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>{label}</button>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       );
