@@ -1,0 +1,8 @@
+{
+  "name": "maria-prototype",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx serve . -p 5173",
+    "build": "echo 'Static site — no build needed'"
+  }
+}

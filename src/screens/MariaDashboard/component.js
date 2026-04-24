@@ -1,0 +1,568 @@
+/**
+ * MariaDashboard — Verizon Business Portal
+ * Self-contained React component. No external dependencies beyond React.
+ * Implements the "Maria Dashboard" Figma frame (TaFgKARVKCKhx2PEImuJ2A, node 120:11491).
+ */
+
+const ASSETS = {
+  mcAvatar: "https://www.figma.com/api/mcp/asset/95a609c5-7e9d-47b2-b246-07f36ba1a3af",
+};
+
+// ─── Design tokens ───────────────────────────────────────────────────────────
+const C = {
+  cream:   "#faf7f0",
+  black:   "#0f0f0f",
+  dark:    "#121212",
+  red:     "#cc050a",
+  green:   "#008c45",
+  posGreen:"#00994d",
+  white:   "#ffffff",
+  border:  "#dedede",
+  border2: "#d9d9d9",
+  border3: "#ccc",
+  gray1:   "#737373",
+  gray2:   "#a6a6a6",
+  gray3:   "#b3b3b3",
+  gray4:   "#999",
+  gray5:   "#666",
+  gray6:   "#e0e0e0",
+  bgLight: "#f7f7f7",
+  text:    "#1e1e1e",
+};
+
+const F = {
+  sans: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+};
+
+// ─── Tiny helpers ────────────────────────────────────────────────────────────
+
+/** Pill / chip button styles */
+function pillStyle(bg, color, border) {
+  return {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "8px 16px",
+    borderRadius: 20,
+    border: border ? `1px solid ${border}` : "none",
+    background: bg,
+    cursor: "pointer",
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+  };
+}
+
+function pillText(color, size = 13, weight = 500) {
+  return {
+    fontFamily: F.sans,
+    fontSize: size,
+    fontWeight: weight,
+    color,
+    lineHeight: "normal",
+  };
+}
+
+// ─── Clock SVG icon ───────────────────────────────────────────────────────────
+function ClockIcon({ size = 40 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ flexShrink: 0 }}
+    >
+      <circle cx="20" cy="20" r="16" stroke="#1e1e1e" strokeWidth="1.5" />
+      <line x1="20" y1="20" x2="20" y2="11" stroke="#1e1e1e" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="20" y1="20" x2="27" y2="20" stroke="#1e1e1e" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// ─── Stats Card ───────────────────────────────────────────────────────────────
+function StatsCard({ heading, body1, body2 }) {
+  return (
+    <div
+      style={{
+        background: C.white,
+        border: `1px solid ${C.border2}`,
+        borderRadius: 8,
+        padding: 24,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 24,
+        width: 316,
+        flexShrink: 0,
+        boxSizing: "border-box",
+      }}
+    >
+      <ClockIcon size={40} />
+      <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center", width: "100%" }}>
+        <p
+          style={{
+            fontFamily: F.sans,
+            fontSize: 24,
+            fontWeight: 600,
+            color: C.text,
+            lineHeight: 1.2,
+            letterSpacing: "-0.48px",
+            textAlign: "center",
+            margin: 0,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {heading}
+        </p>
+        <div style={{ textAlign: "center" }}>
+          <p
+            style={{
+              fontFamily: F.sans,
+              fontSize: 16,
+              fontWeight: 400,
+              color: C.text,
+              lineHeight: 1.4,
+              margin: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {body1}
+          </p>
+          <p
+            style={{
+              fontFamily: F.sans,
+              fontSize: 16,
+              fontWeight: 400,
+              color: C.text,
+              lineHeight: 1.4,
+              margin: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {body2}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Section wrapper ──────────────────────────────────────────────────────────
+function Section({ children, style }) {
+  return (
+    <div
+      style={{
+        background: C.cream,
+        width: "100%",
+        padding: "24px 48px",
+        boxSizing: "border-box",
+        flexShrink: 0,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+function Card({ children, style }) {
+  return (
+    <div
+      style={{
+        background: C.white,
+        border: `1px solid ${C.border}`,
+        borderRadius: 8,
+        padding: 20,
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        alignItems: "flex-start",
+        boxSizing: "border-box",
+        flexShrink: 0,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+export default function MariaDashboard() {
+  return (
+    <div
+      style={{
+        fontFamily: F.sans,
+        background: C.cream,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        width: 1440,
+        minHeight: "100vh",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* ── Top Nav ── */}
+      <nav
+        style={{
+          background: C.black,
+          width: "100%",
+          height: 48,
+          display: "flex",
+          alignItems: "center",
+          padding: "0 24px 0 16px",
+          boxSizing: "border-box",
+          flexShrink: 0,
+          gap: 0,
+        }}
+      >
+        {/* Logo */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 1, paddingRight: 32, width: 100, flexShrink: 0 }}>
+          <span style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 15, color: C.white, lineHeight: "normal" }}>
+            verizon
+          </span>
+          <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 10, color: C.gray3, lineHeight: "normal" }}>
+            business
+          </span>
+        </div>
+
+        {/* Nav links */}
+        <div style={{ display: "flex", gap: 28, alignItems: "center", flexShrink: 0 }}>
+          {["Account", "Lines", "Billing", "Support", "Shop"].map((label) => (
+            <span
+              key={label}
+              style={{
+                fontFamily: F.sans,
+                fontWeight: 400,
+                fontSize: 14,
+                color: C.gray6,
+                lineHeight: "normal",
+                whiteSpace: "nowrap",
+                cursor: "pointer",
+              }}
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+
+        {/* Spacer */}
+        <div style={{ flex: "1 0 0" }} />
+
+        {/* Right: CDP + Avatar */}
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexShrink: 0 }}>
+          <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.gray2, lineHeight: "normal" }}>
+            CDP
+          </span>
+          <img
+            src={ASSETS.mcAvatar}
+            alt="MC"
+            style={{ width: 28, height: 28, borderRadius: "50%", display: "block", flexShrink: 0 }}
+          />
+        </div>
+      </nav>
+
+      {/* ── Autopay Banner ── */}
+      <div
+        style={{
+          background: C.red,
+          width: "100%",
+          height: 40,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
+          flexShrink: 0,
+          boxSizing: "border-box",
+        }}
+      >
+        <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.white, whiteSpace: "pre", lineHeight: "normal" }}>
+          {"✦  Save $28/mo with Autopay — Enrolling your 6 lines saves $4.67/line."}
+        </span>
+        <button
+          style={{
+            ...pillStyle(C.white, C.red, "none"),
+            height: 26,
+            padding: "0 14px",
+          }}
+        >
+          <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 12, color: C.red, lineHeight: "normal" }}>
+            Set Up
+          </span>
+        </button>
+      </div>
+
+      {/* ── Quick Actions ── */}
+      <div
+        style={{
+          background: C.cream,
+          width: "100%",
+          height: 60,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
+          padding: "10px 0",
+          flexShrink: 0,
+          boxSizing: "border-box",
+        }}
+      >
+        {["Shop devices", "Shop deals", "Bring your own device", "Shop internet"].map((label) => (
+          <button key={label} style={pillStyle(C.dark, C.white, "none")}>
+            <span style={pillText(C.white, 13, 500)}>{label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* ── Welcome Section ── */}
+      <Section style={{ paddingTop: 28, paddingBottom: 24 }}>
+        {/* Welcome Row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            marginBottom: 20,
+          }}
+        >
+          <span style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 28, color: C.dark, lineHeight: "normal", whiteSpace: "nowrap" }}>
+            Welcome, Maria
+          </span>
+          <div style={{ flex: "1 0 0" }} />
+          <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.gray5, whiteSpace: "pre", cursor: "pointer" }}>
+            {"⚙  Customize"}
+          </span>
+        </div>
+
+        {/* Stats Row */}
+        <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+          <StatsCard heading="$" body1="Billing" body2="Review invoices and pay your bill →" />
+          <StatsCard heading="6 lines" body1="Manage lines" body2="Stay on top of your lines →" />
+          <StatsCard heading="0 active" body1="Orders" body2="Track active and pending orders →" />
+          <StatsCard heading="1 eligible" body1="Upgrade devices" body2="Shop now to upgrade →" />
+        </div>
+      </Section>
+
+      {/* ── Business Assistant Section ── */}
+      <Section style={{ padding: "16px 48px" }}>
+        <div
+          style={{
+            background: C.white,
+            border: `2px solid ${C.red}`,
+            borderRadius: 8,
+            padding: "20px 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            alignItems: "flex-start",
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          {/* Header Row */}
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            {/* Online dot */}
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />
+            <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 14, color: C.dark, lineHeight: "normal", whiteSpace: "nowrap" }}>
+              Business Assistant
+            </span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.gray1, lineHeight: "normal", whiteSpace: "nowrap" }}>
+              · Powered by AI
+            </span>
+          </div>
+
+          {/* Message Box */}
+          <div
+            style={{
+              background: C.bgLight,
+              borderRadius: 6,
+              padding: "16px 20px",
+              width: "100%",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+            }}
+          >
+            {[
+              { weight: 400, text: "Hey Maria! Welcome back — it's been about 12 days since your last visit." },
+              { weight: 400, text: " " },
+              { weight: 400, text: "A few things happened while you were away:" },
+              { weight: 500, text: "  · Tyler's data hit 92% — I sent him a Wi-Fi reminder automatically, but he may need a plan bump" },
+              { weight: 500, text: "  · Your March bill came in at $342.18 — actually $12 less than February" },
+              { weight: 500, text: "  · You're still paying manually each month — Autopay would save you $336/year and you'd never have to log in just to pay" },
+              { weight: 400, text: " " },
+              { weight: 400, text: "What would you like to tackle first?" },
+            ].map((line, i) => (
+              <p
+                key={i}
+                style={{
+                  fontFamily: F.sans,
+                  fontWeight: line.weight,
+                  fontSize: 14,
+                  color: C.dark,
+                  lineHeight: "normal",
+                  margin: 0,
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {line.text}
+              </p>
+            ))}
+          </div>
+
+          {/* Action Chips */}
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            {[
+              "Set up Autopay and stop worrying",
+              "Deal with Tyler's data issue",
+              "Pay my bill",
+              "Add a line for a new hire",
+            ].map((label) => (
+              <button key={label} style={pillStyle(C.white, C.dark, C.border3)}>
+                <span style={pillText(C.dark, 13, 400)}>{label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Chat Input */}
+          <div
+            style={{
+              background: C.bgLight,
+              border: `1px solid ${C.border2}`,
+              borderRadius: 8,
+              height: 44,
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxSizing: "border-box",
+              padding: "0 16px",
+              cursor: "text",
+            }}
+          >
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 14, color: C.gray4, lineHeight: "normal" }}>
+              Ask anything about your account...
+            </span>
+          </div>
+        </div>
+      </Section>
+
+      {/* ── Billing Section ── */}
+      <Section>
+        <div style={{ display: "flex", gap: 16, alignItems: "flex-start", width: "100%" }}>
+          {/* Billing Card */}
+          <Card style={{ width: 440 }}>
+            <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 16, color: C.dark, lineHeight: "normal" }}>Billing</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.gray1, lineHeight: "normal" }}>Account # 471322617-00001</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.gray1, lineHeight: "normal" }}>Real time balance</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 28, color: C.dark, lineHeight: "normal" }}>$342.18</span>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <button style={pillStyle(C.dark, C.white, "none")}>
+                <span style={pillText(C.white, 13, 500)}>Pay bill</span>
+              </button>
+              <button style={pillStyle(C.white, C.dark, C.border)}>
+                <span style={pillText(C.dark, 13, 500)}>Review bill</span>
+              </button>
+            </div>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.gray1, lineHeight: "normal", whiteSpace: "pre" }}>
+              {"Bill cycle  Mar 15 – Apr 14, 2026  |  Due Apr 15"}
+            </span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.posGreen, lineHeight: "normal" }}>
+              ↓ $12.00 less than last month
+            </span>
+          </Card>
+
+          {/* Reorder Card */}
+          <Card style={{ width: 430 }}>
+            <div style={{ background: C.green, borderRadius: 4, padding: "4px 10px", flexShrink: 0 }}>
+              <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 11, color: C.white }}>Buy again</span>
+            </div>
+            <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 16, color: C.dark, lineHeight: "normal" }}>Reorder business devices.</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.gray1, lineHeight: "normal" }}>View past orders and buy the same devices in just a few clicks.</span>
+            <button style={pillStyle(C.dark, C.white, "none")}>
+              <span style={pillText(C.white, 13, 500)}>Shop past orders</span>
+            </button>
+          </Card>
+
+          {/* Autopay Promo Card */}
+          <Card style={{ width: 430 }}>
+            <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 15, color: C.red, lineHeight: "normal" }}>Save $28/mo with Autopay</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.gray1, lineHeight: "normal" }}>Enroll your 6 lines and never miss a payment.</span>
+            <button style={pillStyle(C.red, C.white, "none")}>
+              <span style={pillText(C.white, 13, 500)}>Set up</span>
+            </button>
+          </Card>
+        </div>
+      </Section>
+
+      {/* ── Your Lines Section ── */}
+      <Section>
+        <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 20, color: C.red, lineHeight: "normal", marginBottom: 16, display: "block" }}>
+          Your lines
+        </span>
+        <div style={{ display: "flex", gap: 16, alignItems: "flex-start", width: "100%" }}>
+          {/* Devices Card */}
+          <Card style={{ width: 440 }}>
+            <span style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 22, color: C.dark }}>6 devices</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.gray1 }}>Line Status</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.dark, whiteSpace: "pre" }}>{"Active                         6"}</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.dark, whiteSpace: "pre" }}>{"Device payments          2"}</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.red, whiteSpace: "pre", cursor: "pointer" }}>
+              {"Manage all lines  ·  Change or activate  ·  Trade-in"}
+            </span>
+          </Card>
+
+          {/* Upgrade Card */}
+          <Card style={{ width: 430 }}>
+            <div style={{ background: C.green, borderRadius: 4, padding: "4px 10px", flexShrink: 0 }}>
+              <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 11, color: C.white }}>+ Special offers available</span>
+            </div>
+            <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 14, color: C.dark, lineHeight: "normal" }}>Upgrade devices</span>
+            <span style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 20, color: C.dark, lineHeight: "normal" }}>1 eligible lines</span>
+            <button style={pillStyle(C.dark, C.white, "none")}>
+              <span style={pillText(C.white, 13, 500)}>Upgrade now</span>
+            </button>
+          </Card>
+        </div>
+      </Section>
+
+      {/* ── Your Plans Section ── */}
+      <Section>
+        <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 20, color: C.red, lineHeight: "normal", marginBottom: 16, display: "block" }}>
+          Your plans
+        </span>
+        <Card style={{ width: "100%" }}>
+          <span style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 20, color: C.dark }}>2 plans</span>
+          <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 13, color: C.red, whiteSpace: "pre", cursor: "pointer" }}>
+            {"Change plans  ·  Manage features and add-ons  ·  Review account"}
+          </span>
+        </Card>
+      </Section>
+
+      {/* ── Tools & Resources Section ── */}
+      <Section>
+        <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 20, color: C.dark, lineHeight: "normal", marginBottom: 16, display: "block" }}>
+          Tools &amp; Resources
+        </span>
+        <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+          {[
+            { icon: "🌐", title: "Business Internet Portal", sub: "Manage your connectivity →" },
+            { icon: "📞", title: "Welcome to One Talk", sub: "Manage your business phone service →" },
+            { icon: "🛒", title: "Verizon Business Marketplace", sub: "Software solutions for your practice →" },
+            { icon: "❓", title: "Need some help?", sub: "Chat, call, or find answers fast →" },
+          ].map(({ icon, title, sub }) => (
+            <Card key={title} style={{ width: 316, cursor: "pointer" }}>
+              <span style={{ fontFamily: F.sans, fontWeight: 600, fontSize: 14, color: C.dark, whiteSpace: "pre" }}>
+                {`${icon}  ${title}`}
+              </span>
+              <span style={{ fontFamily: F.sans, fontWeight: 400, fontSize: 12, color: C.gray1 }}>{sub}</span>
+            </Card>
+          ))}
+        </div>
+      </Section>
+    </div>
+  );
+}
